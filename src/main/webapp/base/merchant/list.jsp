@@ -21,8 +21,8 @@
                             <input type="text" name="name"  placeholder="请输入" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <a href="javascript:;" data-opt="add" class="layui-btn layui-btn-small" >
-                        <i class="layui-icon">&#xe608;</i> 搜索
+                    <a href="javascript:;" class="layui-btn layui-btn-small" lay-submit="" lay-filter="form-submit-btn">
+                        <i class="layui-icon">&#xe615;</i> 搜索
                     </a>
                     <a href="javascript:;" data-opt="add" class="layui-btn layui-btn-small" >
                         <i class="layui-icon">&#xe608;</i> 添加

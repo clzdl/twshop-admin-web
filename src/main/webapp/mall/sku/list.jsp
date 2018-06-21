@@ -15,23 +15,6 @@
                             <input type="text" name="id"  placeholder="请输入" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">名称</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="name"  placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-	                    <label class="layui-form-label">商户</label>
-	                    <div class="layui-input-inline">
-	                        <select name="merchantId">
-	                            <option value="">--请选择--</option>
-	                            <c:forEach var="result" items="${merchantList}" >
-	                            <option value="${result.id }" >${result.name }</option>
-	                            </c:forEach>
-	                        </select>
-	                    </div>
-                    </div>
                     <a href="javascript:;" class="layui-btn layui-btn-small" lay-submit="" lay-filter="form-submit-btn">
                         <i class="layui-icon">&#xe615;</i> 搜索
                     </a>
@@ -55,16 +38,12 @@
 							<thead>
 								<tr>
 									<th>ID</th>
-                                    <th>商户</th>
+                                    <th>产品</th>
+									<th>库存</th>
 									<th>名称</th>
 									<th>封面</th>
 									<th>价格</th>
 									<th>市场价</th>
-									<th>免运费</th>
-									<th>推荐</th>
-									<th>精品</th>
-									<th>分销</th>
-									<th>状态</th>
 									<th>创建时间</th>
 									<th>操作</th>
 								</tr>
@@ -84,32 +63,22 @@
 			{{# layui.each(d.list, function(index, item){ }}
 			<tr>
 				<td>{{ item.id }}</td>
-                <td>{{ item.merchantId }}</td>
-				<td>{{ item.name}}</td>
+                <td>{{ item.itemId }}</td>
+				<td>{{ item.quantity}}</td>
 				<td> 
                     {{# if(item.imgUrlOutput){ }}
                     <img alt="" src="{{ item.imgUrlOutput }}" style="width:100%;">
                     {{# } }}
                 </td>
+                <td> {{ item.title }} </td>
                 <td> {{ item.priceOutput }} </td>
                 <td> {{ item.marketPriceOutput }} </td>
-                <td> {{ item.freePostfeeOutput }} </td>
-                <td> {{ item.recomendTagOutput }} </td>
-                <td> {{ item.soulTagOutput }} </td>
-                <td> {{ item.distributeTagOutput }} </td>
-                <td> {{ item.statusOutput }} </td>
                 <td> {{ item.createTimeOutput }} </td>
                 <td>
                     <div class="layui-btn-group">
                     <a href="javascript:;" data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
-                    <a href="javascript:;" data-id="{{ item.id }}" data-opt="sku-list" class="layui-btn layui-btn-mini">库存列表</a>
+                    <a href="javascript:;" data-id="{{ item.id }}" data-opt="img-list" class="layui-btn layui-btn-mini">图片列表</a>
                     <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
-                                        
-                    {{# if(item.status == 0 ){ }}
-                        <a href="javascript:;" data-id="{{ item.id }}" data-opt="change-shelve" class="layui-btn layui-btn-mini">上架</a>    
-                    {{# }else if(item.status == 1) { }}
-                        <a href="javascript:;" data-id="{{ item.id }}" data-opt="change-shelve" class="layui-btn layui-btn-mini">下架</a>
-                    {{# } }}
                     </div>
                 </td>
 			</tr>
@@ -129,7 +98,7 @@
 					laytpl = layui.laytpl;
 
 				paging.init({
-					url: '/mall/item/list.json', //地址
+					url: '/mall/sku/list.json', //地址
 					elem: '#con', //内容容器
 					params: { //发送到服务端的参数
 					},
@@ -146,7 +115,7 @@
                                 title: '编辑',
                                 maxmin: true,
                                 type: 2,
-                                content: '/mall/item/toedit?itemId=' + id,
+                                content: '/mall/sku/toedit?skuId=' + id,
                                 area: ['800px', '600px']
                             });
                         });
@@ -154,7 +123,7 @@
                         $('a[data-opt="del"]').on('click', function() {
                             var id = $(this).attr('data-id');   
                             layer.confirm('确定该操作吗？', {icon: 3, title:'提示'}, function(index){
-                                $.post('/mall/item/deletebyid.json', {"itemId": id}, function(res){
+                                $.post('/mall/sku/deletebyid.json', {"skuId": id}, function(res){
                                     if(res.flag && res.flag === 1){
                                     	paging.get(
                                             common.serializeObject($(".layui-form")),
@@ -169,35 +138,18 @@
                             });
                         });
                         
-                        $('a[data-opt="sku-list').on('click', function() {
+                        $('a[data-opt="img-list').on('click', function() {
                             var id = $(this).attr('data-id');   
                             var idx = layer.open({
                                 title: '库存列表',
                                 maxmin: true,
                                 type: 2,
-                                content: '/mall/sku/list?itemId=' + id,
+                                content: '/mall/skuimg/list?skuId=' + id,
                                 area: ['1200px', '600px']
                             });
                             layer.full(idx);
                         });
                         
-                        $('a[data-opt="change-shelve"]').on('click', function() {
-                            var id = $(this).attr('data-id');   
-                            layer.confirm('确定上架吗？', {icon: 3, title:'提示'}, function(index){
-                                $.post('/mall/item/changeshelve.json', {"itemId": id}, function(res){
-                                    if(res.flag && res.flag === 1){
-                                    	paging.get(
-                                            common.serializeObject($(".layui-form")),
-                                            true
-                                        );  
-                                    }
-                                    else {
-                                        common.msgError(res.errorMsg);
-                                    }
-                                }, 'json');
-                                layer.close(index);
-                            });
-                        });
 					}
 				});
 				
@@ -206,7 +158,7 @@
                         title: '编辑',
                         maxmin: true,
                         type: 2,
-                        content: '/mall/item/toedit?merchantId=${merchantId}',
+                        content: '/mall/sku/toedit?itemId=${itemId}',
                         area: ['800px', '600px']
                     });
                 });

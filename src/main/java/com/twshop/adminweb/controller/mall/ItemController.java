@@ -41,6 +41,14 @@ public class ItemController extends SysBaseController {
 
 	@RequestMapping(value = "/list")
 	public String handleList(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		List<BaseMerchant> merchantList = null;
+		if (EnumSysUserType.PLAT != EnumSysUserType.getEnum(getCurrentUserType())) {
+			merchantList = new ArrayList<>();
+			merchantList.add(merchantService.getById(getCurrentMerId()));
+		} else {
+			merchantList = merchantService.listAll();
+		}
+		model.addAttribute("merchantList", merchantList);
 		return _VIEW_LIST;
 	}
 
