@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+    
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dynamicDataSource"/>
+        <property name="configLocation" value="classpath:config/mybatis-config.xml"></property>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:mapper/admin/*.xml</value>
+                <value>classpath:mapper/base/*.xml</value>
+                <value>classpath:mapper/mall/*.xml</value>
+                <value>classpath:mapper/wechat/*.xml</value>
+                <value>classpath:mapper/distribute/*.xml</value>
+            </array>
+        </property>
+        <property name="typeAliasesPackage" value="com.twshop.entity.admin;
+                                                    com.twshop.entity.base;
+                                                    com.twshop.entity.mall;
+                                                    com.twshop.entity.wechat;
+                                                    com.twshop.entity.distribute"/>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <value>
+                            helperDialect=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.twshop.dao.admin;
+                                            com.twshop.dao.base;
+                                            com.twshop.dao.mall;
+                                            com.twshop.dao.distribute;
+                                            com.twshop.dao.wechat"/>
+        <!--  markerInterface 之后，MapperScannerConfigurer 将只注册继承自 markerInterface 的接口 -->
+        <property name="markerInterface" value="com.base.mvc.dao.mybatis.IBaseMapper"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dynamicDataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>  

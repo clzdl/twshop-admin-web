@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="INFO">
+	<properties>
+        <property name="LOG_HOME">${sys:catalina.home}/logs</property>
+        <property name="FILE_NAME">twshop-admin-web.log</property>
+        <property name="DEBUG_FILE_NAME">/debug/debug.log</property>
+    </properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}]:[%t:%logger{36}:%level] %msg%n"/>
+		</Console>
+        
+        <File name="FileAppender" fileName="${LOG_HOME}/${FILE_NAME}">  
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}]:[%t:%logger{36}:%level] %msg%n"/>  
+        </File>
+          
+        <File name="DebugFileAppender" fileName="${LOG_HOME}/${DEBUG_FILE_NAME}">  
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}]:[%t:%logger{36}:%level] %msg%n"/>
+        </File>  
+
+        <Async name="AsyncAppender">
+            <AppenderRef ref="FileAppender"/>
+        </Async>
+	</Appenders>
+	<Loggers>
+		<!-- 设置mybatis日志打印级别 -->
+		<Logger name="com.mybatis" level="warn"/>
+		<Logger name="java.sql" level="warn"/>
+		<Logger name="org.springframework" level="warn"/>
+		
+		
+		<!-- web项目日志 -->
+		<Logger name="com.twshop.adminweb" level = "info"/>
+		
+		<!-- 服务项目日志 -->
+		<Logger name="com.twshop" level = "info"/>
+		
+		<!-- 框架项目项目日志 -->
+		<Logger name="com.base" level = "info"/>
+		
+		<!--框架 com.base.DebugLogger 日志 -->
+		<Logger name="com.base.DebugLogger" level= "debug">
+			<appender-ref ref="DebugFileAppender" />
+		</Logger>
+		
+		<Root level="info">
+			<AppenderRef ref="AsyncAppender" />  
+            <AppenderRef ref="Console" />  
+		</Root>
+	</Loggers>
+</Configuration>
