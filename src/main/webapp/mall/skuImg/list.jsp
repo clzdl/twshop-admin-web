@@ -32,18 +32,15 @@
 						  <colgroup>
 						  <col>
 						  <col>
-						  <col>
 						  <col width="100">
 						  </colgroup>
 							<thead>
 								<tr>
 									<th>ID</th>
-                                    <th>产品</th>
-									<th>库存</th>
-									<th>名称</th>
-									<th>封面</th>
-									<th>价格</th>
-									<th>市场价</th>
+                                    <th>SKU</th>
+									<th>图片</th>
+									<th>类型</th>
+									<th>排序号</th>
 									<th>创建时间</th>
 									<th>操作</th>
 								</tr>
@@ -63,21 +60,18 @@
 			{{# layui.each(d.list, function(index, item){ }}
 			<tr>
 				<td>{{ item.id }}</td>
-                <td>{{ item.itemId }}</td>
-				<td>{{ item.quantity}}</td>
+                <td>{{ item.skuId }}</td>
 				<td> 
                     {{# if(item.imgUrlOutput){ }}
                     <img alt="" src="{{ item.imgUrlOutput }}" style="width:100%;">
                     {{# } }}
                 </td>
-                <td> {{ item.title }} </td>
-                <td> {{ item.priceOutput }} </td>
-                <td> {{ item.marketPriceOutput }} </td>
+                <td> {{ item.imgTypeOutput }} </td>
+                <td> {{ item.sortNo }} </td>
                 <td> {{ item.createTimeOutput }} </td>
                 <td>
                     <div class="layui-btn-group">
                     <a href="javascript:;" data-id="{{ item.id }}" data-opt="edit" class="layui-btn layui-btn-mini">编辑</a>
-                    <a href="javascript:;" data-id="{{ item.id }}" data-opt="img-list" class="layui-btn layui-btn-mini">图片列表</a>
                     <a href="javascript:;" data-id="{{ item.id }}" data-opt="del" class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
                     </div>
                 </td>
@@ -98,9 +92,10 @@
 					laytpl = layui.laytpl;
 
 				paging.init({
-					url: '/mall/sku/list.json', //地址
+					url: '/mall/skuimg/list.json', //地址
 					elem: '#con', //内容容器
 					params: { //发送到服务端的参数
+						'skuId':'${skuId}'
 					},
 					tempElem: '#conTemp', //模块容器
 					pageConfig: { //分页参数配置
@@ -115,15 +110,15 @@
                                 title: '编辑',
                                 maxmin: true,
                                 type: 2,
-                                content: '/mall/sku/toedit?skuId=' + id,
-                                area: ['700px', '500px']
+                                content: '/mall/skuimg/toedit?imgId=' + id,
+                                area: ['600px', '400px']
                             });
                         });
                         
                         $('a[data-opt="del"]').on('click', function() {
                             var id = $(this).attr('data-id');   
                             layer.confirm('确定该操作吗？', {icon: 3, title:'提示'}, function(index){
-                                $.post('/mall/sku/deletebyid.json', {"skuId": id}, function(res){
+                                $.post('/mall/skuimg/deletebyid.json', {"imgId": id}, function(res){
                                     if(res.flag && res.flag === 1){
                                     	paging.get(
                                             common.serializeObject($(".layui-form")),
@@ -137,19 +132,6 @@
                                 layer.close(index);
                             });
                         });
-                        
-                        $('a[data-opt="img-list').on('click', function() {
-                            var id = $(this).attr('data-id');   
-                            var idx = layer.open({
-                                title: '库存列表',
-                                maxmin: true,
-                                type: 2,
-                                content: '/mall/skuimg/list?skuId=' + id,
-                                area: ['800px', '600px']
-                            });
-                            layer.full(idx);
-                        });
-                        
 					}
 				});
 				
@@ -158,8 +140,8 @@
                         title: '编辑',
                         maxmin: true,
                         type: 2,
-                        content: '/mall/sku/toedit?itemId=${itemId}',
-                        area: ['700px', '500px']
+                        content: '/mall/skuimg/toedit?skuId=${skuId}',
+                        area: ['600px', '400px']
                     });
                 });
                 
