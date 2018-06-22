@@ -176,7 +176,7 @@
                                 maxmin: true,
                                 type: 2,
                                 content: '/mall/sku/list?itemId=' + id,
-                                area: ['1200px', '600px']
+                                area: ['1200px', '700px']
                             });
                             layer.full(idx);
                         });

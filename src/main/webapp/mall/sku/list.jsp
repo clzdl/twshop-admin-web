@@ -116,7 +116,7 @@
                                 maxmin: true,
                                 type: 2,
                                 content: '/mall/sku/toedit?skuId=' + id,
-                                area: ['800px', '600px']
+                                area: ['700px', '500px']
                             });
                         });
                         
@@ -159,7 +159,7 @@
                         maxmin: true,
                         type: 2,
                         content: '/mall/sku/toedit?itemId=${itemId}',
-                        area: ['800px', '600px']
+                        area: ['700px', '500px']
                     });
                 });
                 

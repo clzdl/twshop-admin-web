@@ -21,7 +21,7 @@ import com.twshop.service.mall.IMallItemSkuSerivce;
  */
 @Controller
 @RequestMapping("/mall/sku")
-public class ItemSkuontroller extends SysBaseController {
+public class ItemSkuController extends SysBaseController {
 
 	private static final String _VIEW_LIST = "/mall/sku/list";
 	private static final String _VIEW_EDIT = "/mall/sku/edit";
@@ -47,7 +47,7 @@ public class ItemSkuontroller extends SysBaseController {
 	public String handleList(Long skuId, Long itemId, HttpServletRequest request, HttpServletResponse response,
 			Model model) throws Exception {
 		if (null != skuId) {
-			MallItemSku entity = skuService.getById(itemId);
+			MallItemSku entity = skuService.getById(skuId);
 			model.addAttribute("entity", entity);
 		} else {
 			MallItemSku entity = new MallItemSku();
